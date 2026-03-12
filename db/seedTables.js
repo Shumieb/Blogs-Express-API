@@ -1,3 +1,4 @@
+import { blogsData, categoryData, usersData } from "./mockData.js";
 import { getDBConnection } from "./sqliteDB.js";
 
 // function to seed users table
@@ -7,19 +8,19 @@ async function seedUsersTable() {
   try {
     await db.exec("BEGIN TRANSACTION");
 
-    for (const { location, details } of abductionsData) {
+    for (const { name, userName, image, type } of usersData) {
       await db.run(
-        `INSERT INTO abductions (location, details)
-        VALUES (?, ?)`,
-        [location, details],
+        `INSERT INTO users (name, userName, image, type)
+        VALUES (?, ?, ?, ?)`,
+        [name, userName, image, type],
       );
     }
 
     await db.exec("COMMIT");
-    console.log("All records inserted");
+    console.log("All user records inserted");
   } catch (err) {
     await db.exec("ROLLBACK");
-    console.log("Error inserting data", err.message);
+    console.log("Error inserting user data", err.message);
   } finally {
     await db.close();
     console.log("connection closed");
@@ -33,19 +34,19 @@ async function seedCategoriesTable() {
   try {
     await db.exec("BEGIN TRANSACTION");
 
-    for (const { location, details } of abductionsData) {
+    for (const { name, description, image } of categoryData) {
       await db.run(
-        `INSERT INTO abductions (location, details)
-        VALUES (?, ?)`,
-        [location, details],
+        `INSERT INTO categories (name, description, image)
+        VALUES (?, ?, ?)`,
+        [name, description, image],
       );
     }
 
     await db.exec("COMMIT");
-    console.log("All records inserted");
+    console.log("All category records inserted");
   } catch (err) {
     await db.exec("ROLLBACK");
-    console.log("Error inserting data", err.message);
+    console.log("Error inserting category data", err.message);
   } finally {
     await db.close();
     console.log("connection closed");
@@ -59,25 +60,33 @@ async function seedBlogsTable() {
   try {
     await db.exec("BEGIN TRANSACTION");
 
-    for (const { location, details } of abductionsData) {
+    for (const {
+      title,
+      description,
+      blogText,
+      image,
+      featured,
+      userId,
+      categoryId,
+    } of blogsData) {
       await db.run(
-        `INSERT INTO abductions (location, details)
-        VALUES (?, ?)`,
-        [location, details],
+        `INSERT INTO blogs (title, description, blogText, image, featured, userId, categoryId)
+        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [title, description, blogText, image, featured, userId, categoryId],
       );
     }
 
     await db.exec("COMMIT");
-    console.log("All records inserted");
+    console.log("All blog records inserted");
   } catch (err) {
     await db.exec("ROLLBACK");
-    console.log("Error inserting data", err.message);
+    console.log("Error inserting blog data", err.message);
   } finally {
     await db.close();
     console.log("connection closed");
   }
 }
 
-seedUsersTable();
+//seedUsersTable();
 //seedCategoriesTable();
-//seedBlogsTable();
+seedBlogsTable();
