@@ -5,7 +5,7 @@ View blogs
 - Users can retrieve all blogs
   "/api/blogs"
 - Users can retrieve blogs by category
-  "/api/blogs?categoryId=categoryId"
+  "/api/blogs/category/categoryId"
 - Users can retrieve blogs by search term
   "/api/blogs?search=search term"
 - Users can retrieve blogs by author
@@ -13,7 +13,7 @@ View blogs
 - Users can retrieve featured blogs only
   "/api/blogs?featured=1"
 - Users can retrieve blog by blogId
-  "/api/blogs/:blogId"
+  "/api/blogs//blog/:blogId"
 
 Add blogs []
 

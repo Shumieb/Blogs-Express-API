@@ -1,8 +1,16 @@
 import express from "express";
-import { getBlogs } from "../controllers/blogsController.js";
+import {
+  getAllBlogs,
+  getBlogById,
+  getBlogsByCategory,
+} from "../controllers/blogsController.js";
 
 export const blogsRouter = express.Router();
 
-blogsRouter.get("/", getBlogs);
+blogsRouter.get("/", getAllBlogs);
 
-blogsRouter.get("/:blogId", getBlogs);
+blogsRouter.get("/blog/:blogId", getBlogById);
+
+blogsRouter.get("/category/:categoryId", getBlogsByCategory);
+
+blogsRouter.get("/author/:authorId", getBlogsByCategory);
