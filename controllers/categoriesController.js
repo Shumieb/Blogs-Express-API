@@ -1,1 +1,4 @@
-export const getCategories = (req, res) => {};
+export const getCategories = (req, res) => {
+  try {
+  } catch (err) {}
+};

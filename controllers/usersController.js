@@ -1,1 +1,4 @@
-export const getUserById = (req, res) => {};
+export const getUserById = (req, res) => {
+  try {
+  } catch (err) {}
+};
