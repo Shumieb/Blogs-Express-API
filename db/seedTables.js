@@ -89,4 +89,4 @@ async function seedBlogsTable() {
 
 //seedUsersTable();
 //seedCategoriesTable();
-seedBlogsTable();
+//seedBlogsTable();

@@ -1,13 +1,19 @@
 ### Express API the allows users to:
 
-View blogs []
+View blogs
 
-- Users can retrieve all blogs []
-- Users can retrieve blogs by category []
-- Users can retrieve blogs by search term []
-- Users can retrieve blogs by author []
-- Users can retrieve featured blogs only []
-- Users can retrieve blog by blogId []
+- Users can retrieve all blogs
+  "/api/blogs"
+- Users can retrieve blogs by category
+  "/api/blogs?categoryId=category Id"
+- Users can retrieve blogs by search term
+  "/api/blogs?search=search term"
+- Users can retrieve blogs by author
+  "/api/blogs?authorId=author Id"
+- Users can retrieve featured blogs only
+  "/api/blogs?featured=1"
+- Users can retrieve blog by blogId
+  "/api/blogs/:blogId"
 
 Add blogs []
 
