@@ -1,4 +1,4 @@
-Express API the allows users to:
+### Express API the allows users to:
 
 View blogs []
 
@@ -20,3 +20,13 @@ Create blogs []
 Delete blogs []
 
 - Authors can delete their own blogs []
+
+View Categories []
+
+- Users can retrieve all categories []
+
+View Authors []
+
+- Users can retrieve all Authors []
+
+### SQLite used as a database

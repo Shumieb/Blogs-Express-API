@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import { blogsRouter } from "./routes/blogsRouter";
+import { blogsRouter } from "./routes/blogsRouter.js";
+import { categoriesRouter } from "./routes/categoriesRouter.js";
 
 const app = express();
 
@@ -11,7 +12,8 @@ const port = 8000;
 app.use(cors());
 
 // routes
-app.use("/api", blogsRouter);
+app.use("/api/blogs", blogsRouter);
+app.use("/api/categories", categoriesRouter);
 
 // route not found
 app.use((req, res) => {
