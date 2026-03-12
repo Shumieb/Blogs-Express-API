@@ -67,12 +67,10 @@ export const getBlogById = async (req, res) => {
     // return data
     return res.status(200).json(blogs);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        error: "Failed to fetch blog by authorId",
-        details: err.message,
-      });
+    res.status(500).json({
+      error: "Failed to fetch blog by authorId",
+      details: err.message,
+    });
   }
 };
 
@@ -100,12 +98,10 @@ export const getBlogsByCategory = async (req, res) => {
     // return data
     return res.status(200).json(blogs);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        error: "Failed to fetch blogs by categoryId",
-        details: err.message,
-      });
+    res.status(500).json({
+      error: "Failed to fetch blogs by categoryId",
+      details: err.message,
+    });
   }
 };
 
@@ -133,11 +129,87 @@ export const getBlogsByAuthor = async (req, res) => {
     // return data
     return res.status(200).json(blogs);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        error: "Failed to fetch blogs by authorId",
-        details: err.message,
-      });
+    res.status(500).json({
+      error: "Failed to fetch blogs by authorId",
+      details: err.message,
+    });
+  }
+};
+
+// add new blog
+export const addNewBlog = async (req, res) => {
+  try {
+    let newBlog = {};
+
+    if (req.body.title && req.body.title.length > 3) {
+      newBlog["title"] = req.body.title;
+    } else {
+      return res.status(400).json({ message: "Title is required" });
+    }
+
+    if (req.body.description && req.body.description.length > 10) {
+      newBlog["description"] = req.body.description;
+    } else {
+      return res.status(400).json({ message: "Description is required" });
+    }
+
+    if (req.body.blogText && req.body.blogText.length > 10) {
+      newBlog["blogText"] = req.body.blogText;
+    } else {
+      return res.status(400).json({ message: "BlogText is required" });
+    }
+
+    if (req.body.userId) {
+      newBlog["userId"] = req.body.userId;
+    } else {
+      return res.status(400).json({ message: "User Id is required" });
+    }
+
+    if (req.body.categoryId) {
+      newBlog["categoryId"] = req.body.categoryId;
+    } else {
+      return res.status(400).json({ message: "Category Id is required" });
+    }
+
+    if (req.body.image) {
+      newBlog["image"] = req.body.image;
+    } else {
+      newBlog["image"] = "default_image";
+    }
+
+    if (req.body.featured) {
+      newBlog["featured"] = req.body.featured;
+    } else {
+      newBlog["featured"] = 0;
+    }
+
+    // connect to the database
+    const db = await getDBConnection();
+
+    let query = `INSERT INTO blogs (title, description, blogText, image, featured, userId, categoryId)
+        VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    let params = [
+      newBlog.title,
+      newBlog.description,
+      newBlog.blogText,
+      newBlog.image,
+      newBlog.featured,
+      newBlog.userId,
+      newBlog.categoryId,
+    ];
+
+    // add data to database
+    let createdBlog = await db.run(query, params);
+
+    // add id to object
+    newBlog["blogId"] = createdBlog.lastID;
+
+    // return created blog
+    res.status(204).json(newBlog);
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed to add new blog",
+      details: err.message,
+    });
   }
 };

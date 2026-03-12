@@ -22,7 +22,8 @@ async function createTable() {
                 userId INTEGER PRIMARY KEY AUTOINCREMENT, 
                 name TEXT NOT NULL, 
                 userName TEXT NOT NULL,
-                image TEXT NOT NULL,
+                biography TEXT,
+                image TEXT,
                 type TEXT NOT NULL
             )
     `,
@@ -35,7 +36,7 @@ async function createTable() {
                 title TEXT NOT NULL, 
                 description TEXT NOT NULL,
                 blogText TEXT NOT NULL,
-                image TEXT NOT NULL,
+                image TEXT,
                 featured BOOLEAN NOT NULL CHECK (featured IN (0, 1)),
                 userId INTEGER NOT NULL,
                 categoryId INTEGER NOT NULL,

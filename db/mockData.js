@@ -2,18 +2,21 @@ export const usersData = [
   {
     name: "user_one",
     userName: "user_one",
+    biography: "user_one biography",
     image: "user_one_image",
     type: "author",
   },
   {
     name: "user_two",
     userName: "user_two",
+    biography: "user_two biography",
     image: "user_two_image",
     type: "author",
   },
   {
     name: "user_three",
     userName: "user_three",
+    biography: "user_three biography",
     image: "user_three_image",
     type: "author",
   },

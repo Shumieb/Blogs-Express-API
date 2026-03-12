@@ -8,11 +8,11 @@ async function seedUsersTable() {
   try {
     await db.exec("BEGIN TRANSACTION");
 
-    for (const { name, userName, image, type } of usersData) {
+    for (const { name, userName, biography, image, type } of usersData) {
       await db.run(
-        `INSERT INTO users (name, userName, image, type)
+        `INSERT INTO users (name, userName, biography, image, type)
         VALUES (?, ?, ?, ?)`,
-        [name, userName, image, type],
+        [name, userName, biography, image, type],
       );
     }
 
