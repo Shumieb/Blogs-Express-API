@@ -1,6 +1,8 @@
 import express from "express";
-import { getUserById } from "../controllers/usersController.js";
+import { getAuthors } from "../controllers/usersController.js";
 
 export const usersRouter = express.Router();
 
-usersRouter.get("/:userId", getUserById);
+usersRouter.get("/authors", getAuthors);
+
+usersRouter.get("/authors/:userId", getAuthors);

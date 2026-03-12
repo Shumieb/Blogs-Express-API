@@ -5,11 +5,11 @@ View blogs
 - Users can retrieve all blogs
   "/api/blogs"
 - Users can retrieve blogs by category
-  "/api/blogs?categoryId=category Id"
+  "/api/blogs?categoryId=categoryId"
 - Users can retrieve blogs by search term
   "/api/blogs?search=search term"
 - Users can retrieve blogs by author
-  "/api/blogs?authorId=author Id"
+  "/api/blogs?authorId=authorId"
 - Users can retrieve featured blogs only
   "/api/blogs?featured=1"
 - Users can retrieve blog by blogId
@@ -27,12 +27,18 @@ Delete blogs []
 
 - Authors can delete their own blogs []
 
-View Categories []
+View Categories
 
-- Users can retrieve all categories []
+- Users can retrieve all categories
+  "/api/categories"
+- Users can retrieve a category by Id
+  "/api/categories/categoryId"
 
-View Authors []
+View Authors
 
-- Users can retrieve all Authors []
+- Users can retrieve all Authors
+  "/api/users/authors"
+- Users can retrieve a Author by Id
+  "api/users/authors/authorId"
 
 ### SQLite used as a database
