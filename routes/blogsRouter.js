@@ -13,7 +13,7 @@ export const blogsRouter = express.Router();
 // get routes
 blogsRouter.get("/", getAllBlogs);
 
-blogsRouter.get("/blog/:blogId", getBlogById);
+blogsRouter.get("/:blogId", getBlogById);
 
 blogsRouter.get("/category/:categoryId", getBlogsByCategory);
 
