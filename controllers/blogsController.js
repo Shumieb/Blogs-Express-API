@@ -58,17 +58,17 @@ export const getBlogById = async (req, res) => {
     }
 
     // make database query
-    const blogs = await db.get(query, params);
+    const blog = await db.get(query, params);
 
     // return if blog with blogId not found
-    if (blogId && blogs.length < 1) {
+    if (blogId && !blog) {
       return res
         .status(400)
         .json({ message: `Blog with id ${blogId} not found.` });
     }
 
     // return data
-    return res.status(200).json(blogs);
+    return res.status(200).json(blog);
   } catch (err) {
     res.status(500).json({
       error: "Failed to fetch blog by authorId",
