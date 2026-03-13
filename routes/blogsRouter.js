@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addNewBlog,
+  deleteBlog,
   getAllBlogs,
   getBlogById,
   getBlogsByCategory,
@@ -23,3 +24,6 @@ blogsRouter.post("/", addNewBlog);
 
 // update routes
 blogsRouter.put("/:authorId/:blogId", updateBlog);
+
+// delete routes
+blogsRouter.delete("/:authorId/:blogId", deleteBlog);

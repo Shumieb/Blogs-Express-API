@@ -20,13 +20,15 @@ Add a new blog
 - Authors can add new blogs
   "/api/blogs"
 
-Update blogs []
+Update blogs
 
 - Authors can update their own blogs
+  "/api/:authorId/:blogId"
 
-Delete blogs []
+Delete blogs
 
-- Authors can delete their own blogs []
+- Authors can delete their own blogs
+  "/api/:authorId/:blogId"
 
 View Categories
 

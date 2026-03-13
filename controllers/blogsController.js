@@ -282,3 +282,29 @@ export const updateBlog = async (req, res) => {
     console.log("connection closed");
   }
 };
+
+// delete a blog
+export const deleteBlog = async (req, res) => {
+  // connect to the database
+  const db = await getDBConnection();
+  try {
+    const { authorId, blogId } = req.params;
+
+    let query = `DELETE FROM blogs 
+                  WHERE blogId = ? AND userId = ? `;
+    let params = [blogId, authorId];
+
+    // update database
+    await db.run(query, params);
+
+    res.status(204).json({ message: "Blog deleted" });
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed to add update blog",
+      details: err.message,
+    });
+  } finally {
+    await db.close();
+    console.log("connection closed");
+  }
+};
