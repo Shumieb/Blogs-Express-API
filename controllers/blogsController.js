@@ -2,10 +2,10 @@ import { getDBConnection } from "../db/sqliteDB.js";
 
 // get all blogs controller
 export const getAllBlogs = async (req, res) => {
-  try {
-    // connect to the database
-    const db = await getDBConnection();
+  // connect to the database
+  const db = await getDBConnection();
 
+  try {
     let query = "SELECT * FROM blogs";
     let params = [];
 
@@ -33,15 +33,18 @@ export const getAllBlogs = async (req, res) => {
     res
       .status(500)
       .json({ error: "Failed to fetch blogs", details: err.message });
+  } finally {
+    await db.close();
+    console.log("connection closed");
   }
 };
 
 // get blog by ID controller
 export const getBlogById = async (req, res) => {
-  try {
-    // connect to the database
-    const db = await getDBConnection();
+  // connect to the database
+  const db = await getDBConnection();
 
+  try {
     let query = "SELECT * FROM blogs";
     let params = [];
 
@@ -55,7 +58,7 @@ export const getBlogById = async (req, res) => {
     }
 
     // make database query
-    const blogs = await db.all(query, params);
+    const blogs = await db.get(query, params);
 
     // return if blog with blogId not found
     if (blogId && blogs.length < 1) {
@@ -71,15 +74,18 @@ export const getBlogById = async (req, res) => {
       error: "Failed to fetch blog by authorId",
       details: err.message,
     });
+  } finally {
+    await db.close();
+    console.log("connection closed");
   }
 };
 
 // get blogs by category ID controller
 export const getBlogsByCategory = async (req, res) => {
-  try {
-    // connect to the database
-    const db = await getDBConnection();
+  // connect to the database
+  const db = await getDBConnection();
 
+  try {
     let query = "SELECT * FROM blogs";
     let params = [];
 
@@ -102,15 +108,18 @@ export const getBlogsByCategory = async (req, res) => {
       error: "Failed to fetch blogs by categoryId",
       details: err.message,
     });
+  } finally {
+    await db.close();
+    console.log("connection closed");
   }
 };
 
 // get blogs by author ID controller
 export const getBlogsByAuthor = async (req, res) => {
-  try {
-    // connect to the database
-    const db = await getDBConnection();
+  // connect to the database
+  const db = await getDBConnection();
 
+  try {
     let query = "SELECT * FROM blogs";
     let params = [];
 
@@ -133,11 +142,17 @@ export const getBlogsByAuthor = async (req, res) => {
       error: "Failed to fetch blogs by authorId",
       details: err.message,
     });
+  } finally {
+    await db.close();
+    console.log("connection closed");
   }
 };
 
 // add new blog
 export const addNewBlog = async (req, res) => {
+  // connect to the database
+  const db = await getDBConnection();
+
   try {
     let newBlog = {};
 
@@ -171,20 +186,9 @@ export const addNewBlog = async (req, res) => {
       return res.status(400).json({ message: "Category Id is required" });
     }
 
-    if (req.body.image) {
-      newBlog["image"] = req.body.image;
-    } else {
-      newBlog["image"] = "default_image";
-    }
-
-    if (req.body.featured) {
-      newBlog["featured"] = req.body.featured;
-    } else {
-      newBlog["featured"] = 0;
-    }
-
-    // connect to the database
-    const db = await getDBConnection();
+    newBlog["image"] = req.body.image ? req.body.image : "default_image";
+    newBlog["featured"] =
+      req.body.featured != undefined ? req.body.featured : 0;
 
     let query = `INSERT INTO blogs (title, description, blogText, image, featured, userId, categoryId)
         VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -205,11 +209,76 @@ export const addNewBlog = async (req, res) => {
     newBlog["blogId"] = createdBlog.lastID;
 
     // return created blog
-    res.status(204).json(newBlog);
+    res.status(200).json(newBlog);
   } catch (err) {
     res.status(500).json({
       error: "Failed to add new blog",
       details: err.message,
     });
+  } finally {
+    await db.close();
+    console.log("connection closed");
+  }
+};
+
+// update a blog
+export const updateBlog = async (req, res) => {
+  // connect to the database
+  const db = await getDBConnection();
+
+  try {
+    const { authorId, blogId } = req.params;
+    let blog = {};
+
+    // find blog
+    if (blogId && authorId) {
+      let getQuery = `SELECT * FROM blogs 
+                        WHERE blogId = ? AND userId = ?`;
+      blog = await db.get(getQuery, [blogId, authorId]);
+    }
+
+    // update blog
+    if (blog.blogId) {
+      blog = {
+        title: req.body.title ? req.body.title : blog.title,
+        description: req.body.description
+          ? req.body.description
+          : blog.description,
+        blogText: req.body.blogText ? req.body.blogText : blog.blogText,
+        image: req.body.image ? req.body.image : blog.image,
+        featured:
+          req.body.featured != undefined ? req.body.featured : blog.featured,
+        categoryId: req.body.categoryId ? req.body.categoryId : blog.categoryId,
+      };
+
+      let updateQuery = `UPDATE blogs 
+                          SET title= ?, description = ?, blogText = ?, image = ?, featured = ?, categoryId = ? 
+                            WHERE blogId = ? AND userId = ?`;
+      let updateParams = [
+        blog.title,
+        blog.description,
+        blog.blogText,
+        blog.image,
+        blog.featured,
+        blog.categoryId,
+        blogId,
+        authorId,
+      ];
+
+      // update database
+      await db.run(updateQuery, updateParams);
+
+      res.status(200).json(blog);
+    } else {
+      res.status(400).json({ message: `Blog with id ${blogId} not found.` });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed to add update blog",
+      details: err.message,
+    });
+  } finally {
+    await db.close();
+    console.log("connection closed");
   }
 };

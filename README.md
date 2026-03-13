@@ -15,13 +15,14 @@ View blogs
 - Users can retrieve blog by blogId
   "/api/blogs//blog/:blogId"
 
-Add blogs []
+Add a new blog
 
-- Authors can add new blogs []
+- Authors can add new blogs
+  "/api/blogs"
 
-Create blogs []
+Update blogs []
 
-- Authors can update their own blogs []
+- Authors can update their own blogs
 
 Delete blogs []
 
