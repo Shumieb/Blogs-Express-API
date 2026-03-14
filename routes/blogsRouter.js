@@ -4,6 +4,7 @@ import {
   deleteBlog,
   getAllBlogs,
   getBlogById,
+  getBlogsByAuthor,
   getBlogsByCategory,
   updateBlog,
 } from "../controllers/blogsController.js";
@@ -17,7 +18,7 @@ blogsRouter.get("/:blogId", getBlogById);
 
 blogsRouter.get("/category/:categoryId", getBlogsByCategory);
 
-blogsRouter.get("/author/:authorId", getBlogsByCategory);
+blogsRouter.get("/author/:authorId", getBlogsByAuthor);
 
 // post routes
 blogsRouter.post("/", addNewBlog);

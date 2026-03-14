@@ -11,7 +11,7 @@ async function seedUsersTable() {
     for (const { name, userName, biography, image, type } of usersData) {
       await db.run(
         `INSERT INTO users (name, userName, biography, image, type)
-        VALUES (?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?)`,
         [name, userName, biography, image, type],
       );
     }
@@ -63,16 +63,26 @@ async function seedBlogsTable() {
     for (const {
       title,
       description,
-      blogText,
+      content,
       image,
       featured,
+      likes,
       userId,
       categoryId,
     } of blogsData) {
       await db.run(
-        `INSERT INTO blogs (title, description, blogText, image, featured, userId, categoryId)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [title, description, blogText, image, featured, userId, categoryId],
+        `INSERT INTO blogs (title, description, content, image, featured,likes, userId, categoryId)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          title,
+          description,
+          content,
+          image,
+          featured,
+          likes,
+          userId,
+          categoryId,
+        ],
       );
     }
 

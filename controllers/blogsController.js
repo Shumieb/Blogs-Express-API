@@ -6,21 +6,30 @@ export const getAllBlogs = async (req, res) => {
   const db = await getDBConnection();
 
   try {
-    let query = "SELECT * FROM blogs";
+    let query = `SELECT 
+                    blogs.*,
+                    categories.name AS categoryName,
+                    users.userName AS userName                  
+                FROM blogs
+                JOIN categories 
+                ON blogs.categoryId = categories.categoryId
+                JOIN users 
+                ON blogs.userId = users.userId`;
     let params = [];
 
     const { search, featured } = req.query;
 
     // change query if search tearm exists
     if (search) {
-      query += " WHERE title LIKE ? OR description LIKE ? OR blogText LIKE ?";
+      query +=
+        " WHERE blogs.title LIKE ? OR blogs.description LIKE ? OR blogs.content LIKE ?";
       const searchPattern = `%${search}%`;
       params.push(searchPattern, searchPattern, searchPattern);
     }
 
     // change query if featured exists
     if (featured) {
-      query += " WHERE featured = ?";
+      query += " WHERE blogs.featured = ?";
       params.push(featured);
     }
 
@@ -45,7 +54,15 @@ export const getBlogById = async (req, res) => {
   const db = await getDBConnection();
 
   try {
-    let query = "SELECT * FROM blogs";
+    let query = `SELECT 
+                    blogs.*,
+                    categories.name AS categoryName,
+                    users.userName AS userName                  
+                FROM blogs
+                JOIN categories 
+                ON blogs.categoryId = categories.categoryId
+                JOIN users 
+                ON blogs.userId = users.userId`;
     let params = [];
 
     // get blog Id param
@@ -53,7 +70,7 @@ export const getBlogById = async (req, res) => {
 
     // change query if blog Id param exits
     if (blogId) {
-      query += " WHERE blogId = ?";
+      query += " WHERE blogs.blogId = ?";
       params.push(blogId);
     }
 
@@ -86,7 +103,15 @@ export const getBlogsByCategory = async (req, res) => {
   const db = await getDBConnection();
 
   try {
-    let query = "SELECT * FROM blogs";
+    let query = `SELECT 
+                    blogs.*,
+                    categories.name AS categoryName,
+                    users.userName AS userName                  
+                FROM blogs
+                JOIN categories 
+                ON blogs.categoryId = categories.categoryId
+                JOIN users 
+                ON blogs.userId = users.userId`;
     let params = [];
 
     // get category Id param
@@ -94,7 +119,7 @@ export const getBlogsByCategory = async (req, res) => {
 
     // change query if category Id param exits
     if (categoryId) {
-      query += " WHERE categoryId = ?";
+      query += " WHERE blogs.categoryId = ?";
       params.push(categoryId);
     }
 
@@ -120,7 +145,15 @@ export const getBlogsByAuthor = async (req, res) => {
   const db = await getDBConnection();
 
   try {
-    let query = "SELECT * FROM blogs";
+    let query = `SELECT 
+                    blogs.*,
+                    categories.name AS categoryName,
+                    users.userName AS userName                  
+                FROM blogs
+                JOIN categories 
+                ON blogs.categoryId = categories.categoryId
+                JOIN users 
+                ON blogs.userId = users.userId`;
     let params = [];
 
     // get category Id param
@@ -128,7 +161,7 @@ export const getBlogsByAuthor = async (req, res) => {
 
     // change query if author Id param exits
     if (authorId) {
-      query += " WHERE authorId = ?";
+      query += " WHERE blogs.userId = ? ";
       params.push(authorId);
     }
 
@@ -168,10 +201,10 @@ export const addNewBlog = async (req, res) => {
       return res.status(400).json({ message: "Description is required" });
     }
 
-    if (req.body.blogText && req.body.blogText.length > 10) {
-      newBlog["blogText"] = req.body.blogText;
+    if (req.body.content && req.body.content.length > 10) {
+      newBlog["content"] = req.body.content;
     } else {
-      return res.status(400).json({ message: "BlogText is required" });
+      return res.status(400).json({ message: "content is required" });
     }
 
     if (req.body.userId) {
@@ -189,15 +222,17 @@ export const addNewBlog = async (req, res) => {
     newBlog["image"] = req.body.image ? req.body.image : "default_image";
     newBlog["featured"] =
       req.body.featured != undefined ? req.body.featured : 0;
+    newBlog["likes"] = req.body.likes ? req.body.likes : 0;
 
-    let query = `INSERT INTO blogs (title, description, blogText, image, featured, userId, categoryId)
+    let query = `INSERT INTO blogs (title, description, content, image, featured, likes, userId, categoryId)
         VALUES (?, ?, ?, ?, ?, ?, ?)`;
     let params = [
       newBlog.title,
       newBlog.description,
-      newBlog.blogText,
+      newBlog.content,
       newBlog.image,
       newBlog.featured,
+      newBlog.likes,
       newBlog.userId,
       newBlog.categoryId,
     ];
@@ -209,7 +244,12 @@ export const addNewBlog = async (req, res) => {
     newBlog["blogId"] = createdBlog.lastID;
 
     // return created blog
-    res.status(200).json(newBlog);
+    res
+      .status(200)
+      .json(
+        { message: `Blog with id ${newBlog.blogId} has been created` },
+        newBlog.blogId,
+      );
   } catch (err) {
     res.status(500).json({
       error: "Failed to add new blog",
@@ -244,22 +284,24 @@ export const updateBlog = async (req, res) => {
         description: req.body.description
           ? req.body.description
           : blog.description,
-        blogText: req.body.blogText ? req.body.blogText : blog.blogText,
+        content: req.body.content ? req.body.content : blog.content,
         image: req.body.image ? req.body.image : blog.image,
         featured:
           req.body.featured != undefined ? req.body.featured : blog.featured,
+        likes: req.body.likes ? req.body.likes : blog.likes,
         categoryId: req.body.categoryId ? req.body.categoryId : blog.categoryId,
       };
 
       let updateQuery = `UPDATE blogs 
-                          SET title= ?, description = ?, blogText = ?, image = ?, featured = ?, categoryId = ? 
+                          SET title= ?, description = ?, content = ?, image = ?, featured = ?, likes=?, categoryId = ? 
                             WHERE blogId = ? AND userId = ?`;
       let updateParams = [
         blog.title,
         blog.description,
-        blog.blogText,
+        blog.content,
         blog.image,
         blog.featured,
+        blog.likes,
         blog.categoryId,
         blogId,
         authorId,
@@ -268,7 +310,9 @@ export const updateBlog = async (req, res) => {
       // update database
       await db.run(updateQuery, updateParams);
 
-      res.status(200).json(blog);
+      res
+        .status(200)
+        .json({ message: `Blog with id ${blogId} updated` }, blogId);
     } else {
       res.status(400).json({ message: `Blog with id ${blogId} not found.` });
     }

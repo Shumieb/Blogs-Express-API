@@ -45,3 +45,6 @@ View Authors
   "api/users/authors/authorId"
 
 ### SQLite used as a database
+
+TODO:
+[] Add mailing list - used to store emails of people signed up to the newsletter
