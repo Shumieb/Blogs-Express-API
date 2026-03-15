@@ -81,7 +81,6 @@ export const getAllBlogs = async (req, res) => {
       );
     }
 
-    console.log(query);
     // make database query
     const blogs = await db.all(query, params);
 
@@ -302,6 +301,50 @@ export const addNewBlog = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: "Failed to add new blog",
+      details: err.message,
+    });
+  } finally {
+    await db.close();
+    console.log("connection closed");
+  }
+};
+
+// update a blog
+export const updateBlogLikes = async (req, res) => {
+  // connect to the database
+  const db = await getDBConnection();
+
+  try {
+    const { blogId } = req.params;
+    let blog = {};
+
+    // find blog
+    if (blogId) {
+      let getQuery = `SELECT * FROM blogs 
+                        WHERE blogId = ?`;
+      blog = await db.get(getQuery, [blogId]);
+    }
+
+    // update blog
+    if (blog.blogId) {
+      //increment likes
+      blog.likes = blog.likes + 1;
+
+      let updateQuery = `UPDATE blogs SET likes=? WHERE blogId = ?`;
+      let updateParams = [blog.likes, blogId];
+
+      // update database
+      await db.run(updateQuery, updateParams);
+
+      res
+        .status(200)
+        .json({ message: `Likes for Blog with id ${blogId} updated` }, blogId);
+    } else {
+      res.status(400).json({ message: `Blog with id ${blogId} not found.` });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed to add update blog",
       details: err.message,
     });
   } finally {

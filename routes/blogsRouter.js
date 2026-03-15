@@ -7,6 +7,7 @@ import {
   getBlogsByAuthor,
   getBlogsByCategory,
   updateBlog,
+  updateBlogLikes,
 } from "../controllers/blogsController.js";
 
 export const blogsRouter = express.Router();
@@ -24,6 +25,7 @@ blogsRouter.get("/author/:authorId", getBlogsByAuthor);
 blogsRouter.post("/", addNewBlog);
 
 // update routes
+blogsRouter.put("/likes/:blogId", updateBlogLikes);
 blogsRouter.put("/:authorId/:blogId", updateBlog);
 
 // delete routes
