@@ -17,15 +17,7 @@ export const getAllBlogs = async (req, res) => {
                 ON blogs.userId = users.userId`;
     let params = [];
 
-    const { search, featured } = req.query;
-
-    // change query if search tearm exists
-    if (search) {
-      query +=
-        " WHERE blogs.title LIKE ? OR blogs.description LIKE ? OR blogs.content LIKE ?";
-      const searchPattern = `%${search}%`;
-      params.push(searchPattern, searchPattern, searchPattern);
-    }
+    const { searchTerm, featured, categoryId, authorId } = req.query;
 
     // change query if featured exists
     if (featured) {
@@ -33,6 +25,63 @@ export const getAllBlogs = async (req, res) => {
       params.push(featured);
     }
 
+    // change query if only categoryId exists
+    if (categoryId && !authorId && !searchTerm) {
+      query += " WHERE blogs.categoryId = ?";
+      params.push(categoryId);
+    }
+
+    // change query if only authorId exists
+    if (authorId && !categoryId && !searchTerm) {
+      query += " WHERE blogs.userId = ?";
+      params.push(authorId);
+    }
+
+    // change query if only search tearm exists
+    if (searchTerm && !authorId && !categoryId) {
+      query +=
+        " WHERE blogs.title LIKE ? OR blogs.description LIKE ? OR blogs.content LIKE ?";
+      const searchPattern = `%${searchTerm}%`;
+      params.push(searchPattern, searchPattern, searchPattern);
+    }
+
+    // change query if only categoryId and authorId exists
+    if (categoryId && authorId && !searchTerm) {
+      query += " WHERE blogs.categoryId = ? AND blogs.userId = ?";
+      params.push(categoryId, authorId);
+    }
+
+    // change query if only categoryId and search exists
+    if (categoryId && !authorId && searchTerm) {
+      query +=
+        " WHERE blogs.categoryId = ? AND blogs.title LIKE ? OR blogs.description LIKE ? OR blogs.content LIKE ?";
+      const searchPattern = `%${searchTerm}%`;
+      params.push(categoryId, searchPattern, searchPattern, searchPattern);
+    }
+
+    // change query if only authorId and search exists
+    if (!categoryId && authorId && searchTerm) {
+      query +=
+        " WHERE blogs.userId = ? AND (blogs.title LIKE ? OR blogs.description LIKE ? OR blogs.content LIKE ?)";
+      const searchPattern = `%${searchTerm}%`;
+      params.push(authorId, searchPattern, searchPattern, searchPattern);
+    }
+
+    // change query if categoryId, authorId and search exists
+    if (categoryId && authorId && searchTerm) {
+      query +=
+        " WHERE blogs.userId = ? AND blogs.categoryId = ? AND (blogs.title LIKE ? OR blogs.description LIKE ? OR blogs.content LIKE ?)";
+      const searchPattern = `%${searchTerm}%`;
+      params.push(
+        authorId,
+        categoryId,
+        searchPattern,
+        searchPattern,
+        searchPattern,
+      );
+    }
+
+    console.log(query);
     // make database query
     const blogs = await db.all(query, params);
 
