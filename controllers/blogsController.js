@@ -273,7 +273,7 @@ export const addNewBlog = async (req, res) => {
     newBlog["likes"] = req.body.likes ? req.body.likes : 0;
 
     let query = `INSERT INTO blogs (title, description, content, image, featured, likes, userId, categoryId)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
     let params = [
       newBlog.title,
       newBlog.description,
@@ -292,12 +292,9 @@ export const addNewBlog = async (req, res) => {
     newBlog["blogId"] = createdBlog.lastID;
 
     // return created blog
-    res
-      .status(200)
-      .json(
-        { message: `Blog with id ${newBlog.blogId} has been created` },
-        newBlog.blogId,
-      );
+    res.status(200).json({
+      message: `${newBlog.blogId}`,
+    });
   } catch (err) {
     res.status(500).json({
       error: "Failed to add new blog",
@@ -309,7 +306,7 @@ export const addNewBlog = async (req, res) => {
   }
 };
 
-// update a blog
+// update a blog likes
 export const updateBlogLikes = async (req, res) => {
   // connect to the database
   const db = await getDBConnection();
@@ -402,9 +399,7 @@ export const updateBlog = async (req, res) => {
       // update database
       await db.run(updateQuery, updateParams);
 
-      res
-        .status(200)
-        .json({ message: `Blog with id ${blogId} updated` }, blogId);
+      res.status(200).json({ message: `Blog with id ${blogId} updated` });
     } else {
       res.status(400).json({ message: `Blog with id ${blogId} not found.` });
     }
@@ -433,10 +428,10 @@ export const deleteBlog = async (req, res) => {
     // update database
     await db.run(query, params);
 
-    res.status(204).json({ message: "Blog deleted" });
+    res.status(200).json({ message: "Blog deleted" });
   } catch (err) {
     res.status(500).json({
-      error: "Failed to add update blog",
+      error: "Failed to delete blog from db",
       details: err.message,
     });
   } finally {

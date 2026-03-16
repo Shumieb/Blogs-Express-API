@@ -25,6 +25,9 @@ Update blogs
 - Authors can update their own blogs
   "/api/:authorId/:blogId"
 
+- Users can update likes
+  "api/blogs/likes/:blogId"
+
 Delete blogs
 
 - Authors can delete their own blogs
