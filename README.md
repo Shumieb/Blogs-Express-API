@@ -40,14 +40,18 @@ View Categories
 - Users can retrieve a category by Id
   "/api/categories/categoryId"
 
-View Authors
+Authors
 
 - Users can retrieve all Authors
   "/api/users/authors"
 - Users can retrieve a Author by Id
   "api/users/authors/authorId"
+- Authors can update authors datails
+  "api/users/authors/authorId"
 
 ### SQLite used as a database
 
 TODO:
+[] Add auth functionality
 [] Add mailing list - used to store emails of people signed up to the newsletter
+[] Add contact us functionality
