@@ -1,6 +1,8 @@
-### Express API the allows users to:
+# Express API
 
-View blogs
+## SQLite used as a database
+
+## View blogs
 
 - Users can retrieve all blogs
   "/api/blogs"
@@ -15,12 +17,12 @@ View blogs
 - Users can retrieve blog by blogId
   "/api/blogs//blog/:blogId"
 
-Add a new blog
+## Add a new blog
 
 - Authors can add new blogs
   "/api/blogs"
 
-Update blogs
+## Update blogs
 
 - Authors can update their own blogs
   "/api/:authorId/:blogId"
@@ -28,19 +30,19 @@ Update blogs
 - Users can update likes
   "api/blogs/likes/:blogId"
 
-Delete blogs
+## Delete blogs
 
 - Authors can delete their own blogs
   "/api/:authorId/:blogId"
 
-View Categories
+## View Categories
 
 - Users can retrieve all categories
   "/api/categories"
 - Users can retrieve a category by Id
   "/api/categories/categoryId"
 
-Authors
+## Authors
 
 - Users can retrieve all Authors
   "/api/users/authors"
@@ -48,8 +50,6 @@ Authors
   "api/users/authors/authorId"
 - Authors can update authors datails
   "api/users/authors/authorId"
-
-### SQLite used as a database
 
 TODO:
 [] Add auth functionality
